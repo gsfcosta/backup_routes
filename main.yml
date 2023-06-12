@@ -1,0 +1,24 @@
+---
+- name: Backup
+  become: true
+  become_method: sudo
+  hosts: all:!localhost
+  roles:
+    - backup
+  
+- name: Copy
+  hosts: localhost,repository
+  roles:
+    - role: copy
+    
+- name: Remove files
+  become: true
+  become_method: sudo
+  hosts: all:!localhost
+  roles:
+    - role: remove
+
+- name: Remove files local
+  hosts: localhost
+  roles:
+    - role: remove_local

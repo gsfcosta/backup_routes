@@ -1,0 +1,28 @@
+---
+  - name: "Listando backups"
+    run_once: yes
+    find:
+      paths: /repositorio/route_n/
+      file_type: file
+      patterns: '*.{{ ansible_date_time.date }}.txt'
+      recurse: yes
+      age: -1h
+    when: "{{ inventory_hostname == 'localhost' }}"
+    register: arquivos
+    
+  - name: "Copy to http"
+    become: true
+    become_method: sudo
+    copy:
+      src: "{{ item.path }}"
+      dest: "/tmp/routen/"
+      mode: '0755'
+    when: "{{ inventory_hostname == 'repository' }}"
+    with_items:
+        - "{{ arquivos.files }}"
+
+  - name: "Copy to html"
+    become: true
+    become_method: sudo
+    shell: bash /scripts/copy_files_to_html.sh "{{ ansible_date_time.date }}"
+    when: "{{ inventory_hostname == 'repository' }}"

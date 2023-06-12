@@ -1,0 +1,16 @@
+---
+  - name: "Listando backups"
+    find:
+      paths: /repositorio/route_n/
+      file_type: file
+      patterns: '*.{{ ansible_date_time.date }}.txt'
+      age: -1h
+      recurse: yes
+    register: arquivos
+    
+  - name: "Remove local"
+    file:
+      path: "{{ item.path }}"
+      state: absent
+    with_items:
+        - "{{ arquivos.files }}"

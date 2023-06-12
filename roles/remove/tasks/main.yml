@@ -1,0 +1,7 @@
+---
+  - name: "Remove remote"
+    shell: "rm -f /tmp/{{ inventory_hostname }}.{{ ansible_date_time.date }}.txt"
+    
+  - name: "Remove remote repo"
+    shell: "rm -f /tmp/routen/*"
+    when: "{{ inventory_hostname == 'repository' }}"

@@ -1,0 +1,14 @@
+--- 
+  - name: "Backup route n"
+    shell: "/sbin/route -n > /tmp/{{ inventory_hostname }}.{{ ansible_date_time.date }}.txt"
+    when: ansible_distribution_version <= '7'
+    
+  - name: "Backup route n"
+    shell: "/usr/sbin/route -n > /tmp/{{ inventory_hostname }}.{{ ansible_date_time.date }}.txt"
+    when: ansible_distribution_version >= '7'
+    
+  - name: "Copiando route n"
+    fetch:
+      src: "/tmp/{{ inventory_hostname }}.{{ ansible_date_time.date }}.txt"
+      dest: /repositorio/route_n/
+      flat: yes
